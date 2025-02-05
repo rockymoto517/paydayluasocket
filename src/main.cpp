@@ -11,16 +11,17 @@
 * IO routines, however, follow the Lua  style, being very similar  to the
 * standard Lua read and write functions.
 \*=========================================================================*/
+#include <superblt_flat.h>
 
-#include "luasocket.h"
 #include "auxiliar.h"
-#include "except.h"
-#include "timeout.h"
 #include "buffer.h"
+#include "except.h"
 #include "inet.h"
-#include "tcp.h"
-#include "udp.h"
+#include "luasocket.h"
 #include "select.h"
+#include "tcp.h"
+#include "timeout.h"
+#include "udp.h"
 
 /*-------------------------------------------------------------------------*\
 * Internal function prototypes
@@ -32,29 +33,24 @@ static int base_open(lua_State *L);
 /*-------------------------------------------------------------------------*\
 * Modules and functions
 \*-------------------------------------------------------------------------*/
-static const luaL_Reg mod[] = {
-    {"auxiliar", auxiliar_open},
-    {"except", except_open},
-    {"timeout", timeout_open},
-    {"buffer", buffer_open},
-    {"inet", inet_open},
-    {"tcp", tcp_open},
-    {"udp", udp_open},
-    {"select", select_open},
-    {NULL, NULL}
-};
+static const luaL_Reg mod[] = {{"auxiliar", auxiliar_open},
+                               {"except", except_open},
+                               {"timeout", timeout_open},
+                               {"buffer", buffer_open},
+                               {"inet", inet_open},
+                               {"tcp", tcp_open},
+                               {"udp", udp_open},
+                               {"select", select_open},
+                               {NULL, NULL}};
 
 static luaL_Reg func[] = {
-    {"skip",      global_skip},
-    {"__unload",  global_unload},
-    {NULL,        NULL}
-};
+    {"skip", global_skip}, {"__unload", global_unload}, {NULL, NULL}};
 
 /*-------------------------------------------------------------------------*\
 * Skip a few arguments
 \*-------------------------------------------------------------------------*/
 static int global_skip(lua_State *L) {
-    int amount = (int) luaL_checkinteger(L, 1);
+    int amount = (int)luaL_checkinteger(L, 1);
     int ret = lua_gettop(L) - amount - 1;
     return ret >= 0 ? ret : 0;
 }
@@ -63,7 +59,7 @@ static int global_skip(lua_State *L) {
 * Unloads the library
 \*-------------------------------------------------------------------------*/
 static int global_unload(lua_State *L) {
-    (void) L;
+    (void)L;
     socket_close();
     return 0;
 }
@@ -100,5 +96,19 @@ LUASOCKET_API int luaopen_socket_core(lua_State *L) {
     int i;
     base_open(L);
     for (i = 0; mod[i].name; i++) mod[i].func(L);
+    return 1;
+}
+
+void Plugin_Init() {}
+
+void Plugin_Update() {}
+
+void Plugin_Setup_Lua(lua_State *L) {
+    // Deprecated, see this function's documentation (in superblt_flat.h) for
+    // more detail
+}
+
+int Plugin_PushLua(lua_State *L) {
+    luaopen_socket_core(L);
     return 1;
 }
