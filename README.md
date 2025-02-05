@@ -1,12 +1,18 @@
 # LuaSocket
 
 
-[![Build](https://img.shields.io/github/actions/workflow/status/lunarmodules/luasocket/build.yml?branch=master&label=Build&logo=Lua)](https://github.com/lunarmodules/luasocket/actions?workflow=Build)
-[![Luacheck](https://img.shields.io/github/actions/workflow/status/lunarmodules/luasocket/luacheck.yml?branch=master&label=Luacheck&logo=Lua)](https://github.com/lunarmodules/luasocket/actions?workflow=Luacheck)
-[![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/lunarmodules/luasocket?label=Tag&logo=GitHub)](https://github.com/lunarmodules/luasocket/releases)
-[![Luarocks](https://img.shields.io/luarocks/v/lunarmodules/luasocket?label=Luarocks&logo=Lua)](https://luarocks.org/modules/lunarmodules/luasocket)
-
 LuaSocket is a Lua extension library composed of two parts:
 
 1. a set of C modules that provide support for the TCP and UDP transport layers, and
 2. a set of Lua modules that provide functions commonly needed by applications that deal with the Internet.
+
+---
+This is an attempt at making the LuaSocket library compatible with Payday 2's modloader `SuperBLT`.
+
+## Building
+1. Open an instance of `x86 Native Tools Command Prompt`.
+2. `cd` into a local copy of the repository.
+3. Generate the build files with `cmake -B build -G Ninja` or your preferred build system.
+    * If you want LSP integration, this cmake command also generates a `compile_commands.json` file
+4. If you generated the build files with Ninja, `cd build` to move into the build folder and compile using `ninja`.
+5. After compiling, you should have a file called `luasocket.dll` which can be loaded as a **BLT Native Module**.
